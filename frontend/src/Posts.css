@@ -140,6 +140,11 @@
   pointer-events: none;
 }
 
+.post-card.editing {
+  border: 2px solid #667eea;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
 .post-content {
   margin-bottom: 16px;
 }
@@ -264,6 +269,104 @@
   cursor: not-allowed;
 }
 
+.edit-button {
+  padding: clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px);
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 20px;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.edit-button:hover {
+  background: #fff9e6;
+  border-color: #ffc107;
+  color: #856404;
+  transform: scale(1.05);
+}
+
+.edit-button:active {
+  transform: scale(0.95);
+}
+
+/* Стили для режима редактирования */
+.edit-container {
+  width: 100%;
+}
+
+.edit-input {
+  width: 100%;
+  padding: clamp(12px, 2vw, 14px);
+  border: 2px solid #667eea;
+  border-radius: clamp(10px, 1.5vw, 12px);
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #764ba2;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.save-button {
+  padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 24px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: clamp(8px, 1.5vw, 12px);
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.save-button:active {
+  transform: translateY(0);
+}
+
+.cancel-button {
+  padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 24px);
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 2px solid #dee2e6;
+  border-radius: clamp(8px, 1.5vw, 12px);
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+  transform: translateY(-2px);
+}
+
+.cancel-button:active {
+  transform: translateY(0);
+}
+
 .empty-state {
   background: white;
   border-radius: clamp(12px, 2vw, 16px);
@@ -305,10 +408,20 @@
   .post-actions {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .post-date {
     font-size: 0.75rem;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+
+  .save-button,
+  .cancel-button {
+    width: 100%;
   }
 }
 

@@ -11,7 +11,9 @@ export default class Posts extends Component {
         this.state = {
             data : [],
             inputValue: '',
-            deletingId: null
+            deletingId: null,
+            editingId: null,
+            editValue: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -85,6 +87,43 @@ export default class Posts extends Component {
         }
     }
 
+    startEdit(post) {
+        this.setState({
+            editingId: post.id,
+            editValue: post.text
+        });
+    }
+
+    cancelEdit() {
+        this.setState({
+            editingId: null,
+            editValue: ''
+        });
+    }
+
+    handleEditChange(event) {
+        this.setState({editValue: event.target.value});
+    }
+
+    saveEdit(postId) {
+        if (this.state.editValue.trim()) {
+            postService.updatePost(postId, this.state.editValue)
+                .then(() => {
+                    this.getData();
+                    this.setState({
+                        editingId: null,
+                        editValue: ''
+                    });
+                })
+                .catch(error => {
+                    console.error('Error updating post:', error);
+                    alert('Ошибка при обновлении поста');
+                });
+        } else {
+            alert('Текст поста не может быть пустым');
+        }
+    }
+
     formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleString('ru-RU', {
@@ -138,45 +177,89 @@ export default class Posts extends Component {
                         this.state.data.map(post =>
                             <div 
                                 key={post.id}
-                                className={`post-card ${this.state.deletingId === post.id ? 'deleting' : ''}`}
+                                className={`post-card ${this.state.deletingId === post.id ? 'deleting' : ''} ${this.state.editingId === post.id ? 'editing' : ''}`}
                                 id={`post_${post.id}`}
                             >
                                 <div className="post-content">
-                                    <p className="post-text">{post.text}</p>
+                                    {this.state.editingId === post.id ? (
+                                        <div className="edit-container">
+                                            <textarea 
+                                                className="edit-input"
+                                                value={this.state.editValue}
+                                                onChange={(e) => this.handleEditChange(e)}
+                                                rows="3"
+                                                onKeyPress={(e) => {
+                                                    if (e.key === 'Enter' && e.ctrlKey) {
+                                                        this.saveEdit(post.id);
+                                                    }
+                                                    if (e.key === 'Escape') {
+                                                        this.cancelEdit();
+                                                    }
+                                                }}
+                                            />
+                                            <div className="edit-actions">
+                                                <button 
+                                                    className="save-button"
+                                                    onClick={() => this.saveEdit(post.id)}
+                                                    title="Сохранить (Ctrl+Enter)"
+                                                >
+                                                    ✓ Сохранить
+                                                </button>
+                                                <button 
+                                                    className="cancel-button"
+                                                    onClick={() => this.cancelEdit()}
+                                                    title="Отменить (Esc)"
+                                                >
+                                                    ✕ Отменить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p className="post-text">{post.text}</p>
+                                    )}
                                 </div>
                                 
-                                <div className="post-footer">
-                                    <div className="post-meta">
-                                        <span className="post-date">
-                                            📅 {this.formatDate(post.date)}
-                                        </span>
+                                {this.state.editingId !== post.id && (
+                                    <div className="post-footer">
+                                        <div className="post-meta">
+                                            <span className="post-date">
+                                                {this.formatDate(post.date)}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="post-actions">
+                                            <button 
+                                                className="like-button"
+                                                onClick={() => this.setLike(post)}
+                                                title="Лайкнуть"
+                                            >
+                                                ❤️ {post.likesCount || 0}
+                                            </button>
+                                            <button 
+                                                className="dislike-button"
+                                                onClick={() => this.setDislike(post)}
+                                                title="Дизлайкнуть"
+                                            >
+                                                💔 {post.dislikesCount || 0}
+                                            </button>
+                                            <button 
+                                                className="edit-button"
+                                                onClick={() => this.startEdit(post)}
+                                                title="Редактировать пост"
+                                            >
+                                                ✏️
+                                            </button>
+                                            <button 
+                                                className="delete-button"
+                                                onClick={() => this.deletePost(post.id)}
+                                                disabled={this.state.deletingId === post.id}
+                                                title="Удалить пост"
+                                            >
+                                                {this.state.deletingId === post.id ? '⏳' : '🗑️'}
+                                            </button>
+                                        </div>
                                     </div>
-                                    
-                                    <div className="post-actions">
-                                        <button 
-                                            className="like-button"
-                                            onClick={() => this.setLike(post)}
-                                            title="Лайкнуть"
-                                        >
-                                            ❤️ {post.likesCount || 0}
-                                        </button>
-                                        <button 
-                                            className="dislike-button"
-                                            onClick={() => this.setDislike(post)}
-                                            title="Дизлайкнуть"
-                                        >
-                                            💔 {post.dislikesCount || 0}
-                                        </button>
-                                        <button 
-                                            className="delete-button"
-                                            onClick={() => this.deletePost(post.id)}
-                                            disabled={this.state.deletingId === post.id}
-                                            title="Удалить пост"
-                                        >
-                                            {this.state.deletingId === post.id ? '⏳' : '🗑️'}
-                                        </button>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         )
                     )}
