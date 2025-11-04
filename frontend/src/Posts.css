@@ -209,6 +209,34 @@
   transform: scale(0.95);
 }
 
+.dislike-button {
+  padding: clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px);
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 20px;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.dislike-button:hover {
+  background: #f1f3f5;
+  border-color: #868e96;
+  color: #495057;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+}
+
+.dislike-button:active {
+  transform: scale(0.95);
+}
+
 .delete-button {
   padding: clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px);
   background: #fff5f5;

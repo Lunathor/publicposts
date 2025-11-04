@@ -14,6 +14,11 @@ export default class PostService {
         return axios.get(url).then(response => response.data);
     }
 
+    setDislikePost(id) {
+        const url = `${API_URL}/api/dislike_post/${id}/`;
+        return axios.get(url).then(response => response.data);
+    }
+
     createPost(text) {
         const url = `${API_URL}/api/posts/`;
         return axios.post(url, text);

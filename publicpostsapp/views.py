@@ -42,3 +42,15 @@ def delete_post(request, post_id):
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def dislike_post(request, post_id):
+    if request.method == 'GET':
+        try:
+            post = Post.objects.get(id = post_id)
+        except:
+            return Response(status= status.HTTP_400_BAD_REQUEST)
+
+        post.dislikesCount += 1
+        post.save()
+        return Response({'dislikesCount': post.dislikesCount}, status=status.HTTP_200_OK)

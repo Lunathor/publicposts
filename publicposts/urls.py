@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/posts/', views.posts),
     path('api/like_post/<int:post_id>/', views.like_post),
+    path('api/dislike_post/<int:post_id>/', views.dislike_post),
     path('api/posts/<int:post_id>/', views.delete_post),
 ]

@@ -58,6 +58,17 @@ export default class Posts extends Component {
             })
     }
 
+    setDislike(post) {
+        postService.setDislikePost(post.id)
+        .then(result => {
+            post.dislikesCount = result.dislikesCount || post.dislikesCount + 1
+            this.forceUpdate()
+        })
+        .catch(error => {
+            console.error('Error setting dislike:', error)
+        })
+    }
+
     deletePost(postId) {
         if (window.confirm('Вы уверены, что хотите удалить этот пост?')) {
             this.setState({deletingId: postId});
@@ -147,7 +158,14 @@ export default class Posts extends Component {
                                             onClick={() => this.setLike(post)}
                                             title="Лайкнуть"
                                         >
-                                            ❤️ {post.likesCount}
+                                            ❤️ {post.likesCount || 0}
+                                        </button>
+                                        <button 
+                                            className="dislike-button"
+                                            onClick={() => this.setDislike(post)}
+                                            title="Дизлайкнуть"
+                                        >
+                                            💔 {post.dislikesCount || 0}
                                         </button>
                                         <button 
                                             className="delete-button"
